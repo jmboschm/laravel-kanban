@@ -19,6 +19,7 @@
 import Calendar from '../../Components/Calendar.vue'
 import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
+
 export default {
     name: 'Books',
     components: {
@@ -39,19 +40,18 @@ export default {
     },
     methods : {
         dateClick(arg){
-            this.$data.showModal = true
-            this.setModalOpen(arg)
+            this.$data.showModal = true;
+            this.setModalOpen(arg);
             console.log('recibiendo datos: ',arg)
-        }
-    },
+        },
     closeModal() {
         this.$data.showModal = false
     },
     setModalOpen(obj) {
-        let dateAndTime = obj.dateStr.split("|")
-
+        console.log(obj);
+        let dateAndTime = obj.dateStr.split("T")
         this.newEvent.date_at = dateAndTime[0]
-        this.newEvent.hour = dateAndTime[1].substr(0,8)
+        this.newEvent.end_at = dateAndTime[0]
         this.newEvent.user_id = this.$page.user.id
         return;
     },
@@ -59,32 +59,32 @@ export default {
         if(param.title === ''){
             alert('No puedes dejar el campo titulo vacio')
         }
+        //seteamos una variable
         let dataAppt = this.setDurationSession(param)
         
-        /*Inertia.post(route('appointment.store'), dataAppt, {
+        /*$this.Inertia.post(route('appointment.store'), dataAppt, {
             onSuccess: page =>
-            if(Object entries(page.props.errors).length === 0){
-                this.closeModal()
-            }
-            }
-        });
+                if(Object.entries(page.props.errors).length === 0){
+                    this.closeModal()
+                }
+            });
+        
         //capturamos excepciones
-        Inertia.on("error", event => {
+        $this.Inertia.on("error", event => {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
         });*/
-
     },
     setDurationSession(form) {
-        let dateApt = forn.date_at + " " + forn.hour
+        let dateApt = forn.date_at + " " + forn.end_at;
 
-        let initSesion = new Date(dateApt)
+        let initSesion = new Date(dateApt);
 
-        const getSecondsSesion = initSesion.getSeconds() + form.session
+        const getSecondsSesion = initSesion.getSeconds() + form.session;
 
-        initSesion.setSeconds(getSecondsSesion)
+        initSesion.setSeconds(getSecondsSesion);
 
-        console.info(initSesion.getMonth())
+        console.info(initSesion.getMonth());
 
         return {
             title: form.title,
@@ -93,6 +93,7 @@ export default {
             session: form.session,
             user_id: form.user_id
         }
+    }
     }
 }
 </script>
