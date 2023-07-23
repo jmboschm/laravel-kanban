@@ -125,17 +125,17 @@
                 <!-- start select -->
                 <div class="col-span-6 sm:col-span-3">
                   <label
-                    for="timeSesion"
+                    for="typeVacation"
                     class="block text-sm font-medium leading-5 text-gray-700"
-                  >Duración</label>
+                  >Motivo</label>
                   <select
-                    v-model="form.session"
-                    id="timeSesion"
+                    v-model="form.typeVacation"
+                    id="typeVacation"
                     class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   >
-                    <option value="900">15 minutos</option>
-                    <option value="1800">30 minutos</option>
-                    <option value="3600">1 hora</option>
+                    <option value="red">Vacances</option>
+                    <option value="yellow">Dies Personals</option>
+                    <option value="black">Baixa</option>
                   </select>
                 </div>
                 <!-- end select -->

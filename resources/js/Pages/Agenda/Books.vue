@@ -15,10 +15,11 @@
     </app-layout>
 </template>
 <script>
-
+const user_id = window.user_id;
 import Calendar from '../../Components/Calendar.vue'
 import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
+import { router } from "@inertiajs/vue3"
 
 export default {
     name: 'Books',
@@ -32,9 +33,7 @@ export default {
             newEvent: {
                 title: '',
                 date_at: '',
-                hour: '',
-                user_id: '',
-                session:  1800
+                end_at: ''
             }
         }
     },
@@ -42,25 +41,27 @@ export default {
         dateClick(arg){
             this.$data.showModal = true;
             this.setModalOpen(arg);
-            console.log('recibiendo datos: ',arg)
+            //console.log('recibiendo datos: ',arg)
         },
     closeModal() {
         this.$data.showModal = false
     },
     setModalOpen(obj) {
-        console.log(obj);
-        let dateAndTime = obj.dateStr.split("T")
-        this.newEvent.date_at = dateAndTime[0]
-        this.newEvent.end_at = dateAndTime[0]
-        this.newEvent.user_id = this.$page.user.id
+        //console.log(obj);
+        let dateAndTime = obj.dateStr
+        this.newEvent.date_at = dateAndTime
+        this.newEvent.end_at = dateAndTime
+        //this.newEvent.user_id = this.$page.user.id
+        //console.log('el user id es ' + form.user_id)
         return;
     },
     saveAppt(param){
+        console.log(param)
         if(param.title === ''){
             alert('No puedes dejar el campo titulo vacio')
         }
         //seteamos una variable
-        let dataAppt = this.setDurationSession(param)
+       // let dataAppt = this.setDurationSession(param)
         
         /*$this.Inertia.post(route('appointment.store'), dataAppt, {
             onSuccess: page =>
@@ -74,24 +75,29 @@ export default {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
         });*/
+        router.post('/appointment'), {data: param}, {
+            preserveState: true,
+            replace: true,
+            onSuccess: () => this.closeModal()
+        };    
+        
     },
-    setDurationSession(form) {
-        let dateApt = forn.date_at + " " + forn.end_at;
+    setTypeVacation(form) {
+        let dateApt = form.date_at;
+        let dateEnd = form.end_at;
 
-        let initSesion = new Date(dateApt);
+        //let initSesion = new Date(dateApt);
 
-        const getSecondsSesion = initSesion.getSeconds() + form.session;
+        //const getSecondsSesion = initSesion.getSeconds() + form.session;
 
-        initSesion.setSeconds(getSecondsSesion);
+        //initSesion.setSeconds(getSecondsSesion);
 
-        console.info(initSesion.getMonth());
+     //   console.info(initSesion.getMonth());
 
         return {
             title: form.title,
             start: dateApt,
-            end: formatTime(initSesion),
-            session: form.session,
-            user_id: form.user_id
+            end: dateEnd, 
         }
     }
     }

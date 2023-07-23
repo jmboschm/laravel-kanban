@@ -12,6 +12,8 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardColumnCreateController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AppointmentController;
+
 
 
 /*
@@ -61,6 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/events', SearchController::class)->name('events');
 
+    Route::resource('appointment', AppointmentController::class);
     //Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
 });
 

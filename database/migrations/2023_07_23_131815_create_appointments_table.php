@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->text('title');
             $table->datetime('start_time');
             $table->datetime('finish_time');
             $table->char('color',10);
-            $table->unsignedSmallInteger('session');
+            $table->char('textColor',10)->default('#000000');
             $table->unsignedBigInteger('booked_by');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
