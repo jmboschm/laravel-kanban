@@ -1,6 +1,6 @@
 const Ziggy = {
-  url: 'http://localhost:8081',
-  port: 8081,
+  url: 'http://kanban.test',
+  port: 80,
   defaults: {},
   routes: {
     'debugbar.openhandler': { uri: '_debugbar/open', methods: ['GET', 'HEAD'] },

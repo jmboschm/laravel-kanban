@@ -31,7 +31,7 @@ const onReorderCommit = () => {
 
 <template>
   <Head>
-    <title>Kanban Board</title>
+    <title>Recogida de Clientes</title>
   </Head>
 
   <AuthenticatedLayout>

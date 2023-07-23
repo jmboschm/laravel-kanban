@@ -146,6 +146,10 @@ const showingNavigationDropdown = ref(false);
           >
             Kanban
           </ResponsiveNavLink>
+
+          
+         
+        
         </div>
 
         <!-- Responsive Settings Options -->

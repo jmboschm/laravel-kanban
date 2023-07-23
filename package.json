@@ -29,9 +29,16 @@
     "vue": "^3.2.41"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.8",
+    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/interaction": "^6.1.8",
+    "@fullcalendar/list": "^6.1.8",
+    "@fullcalendar/timegrid": "^6.1.8",
+    "@fullcalendar/vue3": "^6.1.8",
     "@headlessui/vue": "^1.7.11",
     "@heroicons/vue": "^2.0.16",
     "lodash.clonedeep": "^4.5.0",
+    "moment": "^2.29.4",
     "vuedraggable": "^4.1.0"
   },
   "lint-staged": {

@@ -11,6 +11,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardColumnCreateController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +58,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/cards/reorder', CardsReorderUpdateController::class)
         ->name('cards.reorder');
+
+    Route::get('/events', SearchController::class)->name('events');
+
+    //Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
 });
 
 Route::middleware('auth')->group(function () {
