@@ -15,10 +15,11 @@
     </app-layout>
 </template>
 <script>
-const user_id = window.user_id;
+
 import Calendar from '../../Components/Calendar.vue'
 import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
+import { usePage } from "@inertiajs/vue3"
 import { router } from "@inertiajs/vue3"
 
 export default {
@@ -33,7 +34,8 @@ export default {
             newEvent: {
                 title: '',
                 date_at: '',
-                end_at: ''
+                end_at: '',
+                color: ''
             }
         }
     },
@@ -48,10 +50,11 @@ export default {
     },
     setModalOpen(obj) {
         //console.log(obj);
+        const page = usePage()
         let dateAndTime = obj.dateStr
         this.newEvent.date_at = dateAndTime
         this.newEvent.end_at = dateAndTime
-        //this.newEvent.user_id = this.$page.user.id
+        this.newEvent.user_id = page.props.auth.user.id
         //console.log('el user id es ' + form.user_id)
         return;
     },
@@ -61,7 +64,7 @@ export default {
             alert('No puedes dejar el campo titulo vacio')
         }
         //seteamos una variable
-       // let dataAppt = this.setDurationSession(param)
+        let dataAppt = this.setTypeVacation(param)
         
         /*$this.Inertia.post(route('appointment.store'), dataAppt, {
             onSuccess: page =>
@@ -74,20 +77,26 @@ export default {
         $this.Inertia.on("error", event => {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
-        });*/
+        });*
         router.post('/appointment'), {data: param}, {
             preserveState: true,
             replace: true,
             onSuccess: () => this.closeModal()
-        };    
+        };    */
+        router.post('/appointment'), { data: dataAppt }, {
+            preserveState: true,
+            replace: true,
+            onSuccess: () => this.closeModal()
+        }
         
     },
     setTypeVacation(form) {
         let dateApt = form.date_at;
         let dateEnd = form.end_at;
+        //console.log('mirant user: ' + this.$page.user);
 
         //let initSesion = new Date(dateApt);
-
+        const page = usePage()
         //const getSecondsSesion = initSesion.getSeconds() + form.session;
 
         //initSesion.setSeconds(getSecondsSesion);
@@ -98,6 +107,8 @@ export default {
             title: form.title,
             start: dateApt,
             end: dateEnd, 
+            color: form.typeVacation,
+            user_id: page.props.auth.user.id 
         }
     }
     }

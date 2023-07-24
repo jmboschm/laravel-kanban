@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
+
+    public function __invoke(Request $request)
+    {
+        
+    }
     /**
      * Display a listing of the resource.
      */
@@ -30,17 +35,16 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
 
-        dd($request->all());
-        $assignee = ($request->user_id && auth()->user()->isAdmin ?
+         dd($request->all());
+        /*$assignee = ($request->user_id && auth()->user()->isAdmin ?
         $request->user_id : $assignee = auth()->user()->id);
-        //dd($request->all());
+        //dd($request->all());*/
             Appointment::create([
             'title' => $request->title,
             'start_time' => $request->start,
             'finish_time' => $request->end,
             'color' => $request->typeVacation,
-            'booked_by' => $assignee,
-            'user_id' => $assignee
+            'user_id' => $request->user_id
         ]);
 
        // dd(Appointment::class);
