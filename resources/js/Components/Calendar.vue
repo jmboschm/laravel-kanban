@@ -1,7 +1,8 @@
 <template>
-    
+  <div v-if="$page.props.flash.message" class="alert">
+        {{ $page.props.flash.message }}
+    </div>
     <FullCalendar :options="calendarOptions"/>    
-
 </template>
 <script>
 
@@ -11,6 +12,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import esLocale from '@fullcalendar/core/locales/es'
+import { usePage } from "@inertiajs/vue3"
 //import AddAppointmentModal from './Modals/AddAppointmentModal.vue'
 //import notie from 'notie'
 //import axios from 'axios';
@@ -121,6 +123,7 @@ emits: {'dateClick': null},
         rerenderCalendar() {
           this.$refs.fullCalendar.getApi().refetchEvents()
         }*/
+        
     }
 }
 </script>

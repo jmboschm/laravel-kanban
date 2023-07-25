@@ -41,27 +41,16 @@ class AppointmentController extends Controller
           $assignee = auth()->user()->id);
 */
         //dd($request->all());
-        Appointment::create([
+       /* Appointment::create([
           'start_time' => $request->date_at,
           'finish_time' => $request->end_at,
           'title' => $request->title,
           'color' => $request->color,
           'user_id' => $request->user_id,
         ]);
-
-       
-        /*
-            Appointment::create([
-            'title' => $request->title,
-            'start_time' => $request->start,
-            'finish_time' => $request->end,
-            'color' => $request->typeVacation,
-            'user_id' => $request->user_id
-        ]);*/
-
-       // dd(Appointment::class);
+*/
     
-        return redirect()->back()->with('message','Reservado con éxito');
+        return redirect()->back()->with(['message'=>'Reservado con éxito']);
     }
 
     /**

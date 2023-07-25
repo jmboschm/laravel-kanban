@@ -12,7 +12,6 @@
         </div>
     </div>
     <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt"></modal-calendar>
-    
     </app-layout>
 </template>
 <script>
@@ -23,6 +22,7 @@ import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router  } from "@inertiajs/vue3"
+import notie from 'notie'
 //import route from '../../ziggy'
 //import axios from 'axios'
 
@@ -67,7 +67,7 @@ export default {
         return;
     },
     saveAppt(param){
-        console.log(param)
+        //console.log(param)
         if(param.title === ''){
             alert('No puedes dejar el campo titulo vacio')
         }
@@ -87,7 +87,21 @@ export default {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
         });*/
-        router.post(route('appointments.store'), param)
+        router.post(route('appointments.store'), param, { 
+            onSuccess: this.closeModal(),//() => page => {
+                
+               /* new notie.alert({
+                text: `Appointment has been created.`,
+                time: 2,
+                type: 'success'
+            }).show()*/
+            //},
+
+            onError: () => errors  => {
+                errors.preventDefault();
+                console.log('capturamos este error ', errors.message);
+            }
+        });
         /*
         const form = useForm({dataAppt});
         
