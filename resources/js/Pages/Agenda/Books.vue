@@ -12,20 +12,25 @@
         </div>
     </div>
     <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt"></modal-calendar>
+    
     </app-layout>
 </template>
 <script>
 
 import Calendar from '../../Components/Calendar.vue'
 import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
+//import AddAppointmentModal from '../../Components/Modals/AddAppointmentModal.vue'
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router } from "@inertiajs/vue3"
+//import route from '../../ziggy'
+import axios from 'axios'
 
 export default {
     name: 'Books',
     components: {
         Calendar,
+        //AddAppointmentModal,
         ModalCalendar
     },
     data() {
@@ -49,11 +54,14 @@ export default {
         this.$data.showModal = false
     },
     setModalOpen(obj) {
+        this.$data.showModal = true
         //console.log(obj);
         const page = usePage()
-        let dateAndTime = obj.dateStr
-        this.newEvent.date_at = dateAndTime
-        this.newEvent.end_at = dateAndTime
+        //let dateAndTime = obj.dateStr
+        this.newEvent.date_at = obj.dateStr
+        let endTime = (new Date(obj.dateStr)).toISOString()
+        this.newEvent.end_at = endTime
+        this.newEvent.color = ''
         this.newEvent.user_id = page.props.auth.user.id
         //console.log('el user id es ' + form.user_id)
         return;
@@ -77,23 +85,23 @@ export default {
         $this.Inertia.on("error", event => {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
-        });*
-        router.post('/appointment'), {data: param}, {
+        });*/
+        /*router.post('/appointment'), {data: param}, {
             preserveState: true,
             replace: true,
             onSuccess: () => this.closeModal()
-        };    */
-        router.post('/appointment'), { data: dataAppt }, {
+        };*/
+        axios.post('appointment.store'), { data: dataAppt }, {
             preserveState: true,
             replace: true,
             onSuccess: () => this.closeModal()
         }
-        
+    
     },
     setTypeVacation(form) {
         let dateApt = form.date_at;
         let dateEnd = form.end_at;
-        //console.log('mirant user: ' + this.$page.user);
+        let colorVacation = form.color
 
         //let initSesion = new Date(dateApt);
         const page = usePage()
@@ -107,7 +115,7 @@ export default {
             title: form.title,
             start: dateApt,
             end: dateEnd, 
-            color: form.typeVacation,
+            color: colorVacation,
             user_id: page.props.auth.user.id 
         }
     }

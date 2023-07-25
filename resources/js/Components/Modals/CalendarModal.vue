@@ -129,7 +129,7 @@
                     class="block text-sm font-medium leading-5 text-gray-700"
                   >Motivo</label>
                   <select
-                    v-model="form.typeVacation"
+                    v-model="form.color"
                     id="typeVacation"
                     class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   >

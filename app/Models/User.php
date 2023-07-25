@@ -50,8 +50,12 @@ class User extends Authenticatable
     }
 
 
-    public function appointment(): HasOne
+    public function appointments(): HasMany
     {
-        return $this->hasOne(Appointment::class);
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function isAdmin() {
+        return (bool) $this->id === 1;
     }
 }

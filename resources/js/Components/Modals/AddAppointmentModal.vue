@@ -68,6 +68,9 @@
     </div></template>
     
     <script>
+import axios from 'axios'
+import formatTime from '../../Mixins/transformTime'
+
     export default{
         props: ['show', 'date'],
             data: () => ({
@@ -78,7 +81,34 @@
                 },
                 users: []
             }),
+            computed: {
+                validEventData() {
+                    return !!(this.event.title && this.event.assignee != 'nobody')
+                }
+            },
     
+            mounted() {
+                // I absctracted my API calls, this would be the same as:
+                // axios.get('/users').then( .... ) ...
+                const instance = (token) => axios.create({
+                baseURL: 'http://kanban.test/api/',
+                timeout: 1000,
+                headers: {'Authorization': 'Bearer '+token}
+                });
+                axios.get('/api/users')
+                .then(({
+                        data
+                    }) => {
+                        this.users = data
+                    })
+                    .catch(error => {
+                        this.users = []
+                        this.event.assignee = null
+                    })
+                    
+                
+                    
+            },
             methods: {
                 closeModal() {
                     this.event.title = null
@@ -120,7 +150,7 @@
                         note: this.event.note
                     }
     
-                    this.$api.appointments.create(newEventData)
+                axios.appointments.create(newEventData)
                         .then(({
                             data
                         }) => {
@@ -132,27 +162,6 @@
                         })
                 }
     
-            },
-    
-            computed: {
-                validEventData() {
-                    return !!(this.event.title && this.event.assignee != 'nobody')
-                }
-            },
-    
-            mounted() {
-                // I absctracted my API calls, this would be the same as:
-                // axios.get('/users').then( .... ) ...
-                this.$api.users.index()
-                    .then(({
-                        data
-                    }) => {
-                        this.users = data
-                    })
-                    .catch(error => {
-                        this.users = []
-                        this.event.assignee = null
-                    })
             }
         }
     </script>

@@ -18,7 +18,6 @@ class Appointment extends Model
         'start_time',
         'finish_time',
         'color',
-        'booked_by',
         'user_id'
     ];
 
