@@ -22,9 +22,9 @@ import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 //import AddAppointmentModal from '../../Components/Modals/AddAppointmentModal.vue'
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
-import { router } from "@inertiajs/vue3"
+import { router  } from "@inertiajs/vue3"
 //import route from '../../ziggy'
-import axios from 'axios'
+//import axios from 'axios'
 
 export default {
     name: 'Books',
@@ -59,7 +59,7 @@ export default {
         const page = usePage()
         //let dateAndTime = obj.dateStr
         this.newEvent.date_at = obj.dateStr
-        let endTime = (new Date(obj.dateStr)).toISOString()
+        let endTime = obj.dateStr
         this.newEvent.end_at = endTime
         this.newEvent.color = ''
         this.newEvent.user_id = page.props.auth.user.id
@@ -72,9 +72,10 @@ export default {
             alert('No puedes dejar el campo titulo vacio')
         }
         //seteamos una variable
-        let dataAppt = this.setTypeVacation(param)
-        
-        /*$this.Inertia.post(route('appointment.store'), dataAppt, {
+      //  let dataAppt = this.setTypeVacation(param)
+      //  console.log('aixo es datappt ' + dataAppt);
+        //console.log(dataAppt);
+     /*   $this.Inertia.post(route('appointment.store'), dataAppt, {
             onSuccess: page =>
                 if(Object.entries(page.props.errors).length === 0){
                     this.closeModal()
@@ -82,20 +83,24 @@ export default {
             });
         
         //capturamos excepciones
-        $this.Inertia.on("error", event => {
+        /*$this.Inertia.on("error", event => {
             event.preventDefault();
             console.log('capturamos este error ', error.message);
         });*/
-        /*router.post('/appointment'), {data: param}, {
+        router.post(route('appointments.store'), param)
+        /*
+        const form = useForm({dataAppt});
+        
+        form.submit('post',route('appointment.store'), {
             preserveState: true,
             replace: true,
             onSuccess: () => this.closeModal()
-        };*/
-        axios.post('appointment.store'), { data: dataAppt }, {
-            preserveState: true,
-            replace: true,
-            onSuccess: () => this.closeModal()
-        }
+        });
+        form.submit('post',route('appointment.store'), {
+        onError: () => event => {
+            event.preventDefault();
+            console.log('capturamos este error ', error.message);
+        }});*/
     
     },
     setTypeVacation(form) {

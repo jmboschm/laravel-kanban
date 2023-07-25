@@ -63,10 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/events', SearchController::class)->name('events');
 
-    Route::post('/appointment', AppointmentController::class)
-        ->name('appointment.store');
+    //Route::post('/appointment', AppointmentController::class)->name('appointment.store');
 
-    Route::resource('appointment', AppointmentController::class);
+     Route::resource('appointments', AppointmentController::class);
     //Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
 });
 

@@ -40,13 +40,13 @@ class AppointmentController extends Controller
           $request->user_id :
           $assignee = auth()->user()->id);
 */
+        //dd($request->all());
         Appointment::create([
-          'start_time' => $request->start,
-          'finish_time' => $request->end,
+          'start_time' => $request->date_at,
+          'finish_time' => $request->end_at,
           'title' => $request->title,
-          'color' => $request->typeVacation,
+          'color' => $request->color,
           'user_id' => $request->user_id,
-          'booked_by' => (Auth::user()->isAdmin ? $request->user_id : $request->user_id)
         ]);
 
        

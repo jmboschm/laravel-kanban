@@ -88,6 +88,7 @@ const Ziggy = {
     'password.confirm': { uri: 'confirm-password', methods: ['GET', 'HEAD'] },
     'password.update': { uri: 'password', methods: ['PUT'] },
     logout: { uri: 'logout', methods: ['POST'] },
+    'appointments': { uri: 'appointments', methods: ['POST'] },
   },
 };
 
