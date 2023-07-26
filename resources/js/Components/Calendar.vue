@@ -1,5 +1,7 @@
 <template>
-    <FullCalendar :options="calendarOptions"/>    
+    <FullCalendar :options="calendarOptions"/>   
+  
+ 
 </template>
 <script>
 
@@ -10,6 +12,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import esLocale from '@fullcalendar/core/locales/es'
 import { usePage } from "@inertiajs/vue3"
+
 //import AddAppointmentModal from './Modals/AddAppointmentModal.vue'
 //import notie from 'notie'
 //import axios from 'axios';

@@ -1,26 +1,3 @@
-<template>
-    <app-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Calendar</h2>   
-            <span>{{ $page.user }}</span>
-        </template>  
-        <div
-      class="alert alert-dismissible fade show items-center justify-between rounded-lg bg-green-500 py-4 px-6 text-center text-white md:flex md:text-left">
-      <div class="mb-4 flex flex-wrap items-center justify-center md:mb-0 md:justify-start" v-if="$page.props.flash.message">
-        {{ $page.props.flash.message }}
-      </div>
-    </div>
-        
-        <div class="py-12">
-        <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <Calendar @dateClick="dateClick"/>
-            </div>
-        </div>
-    </div>
-    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt"></modal-calendar>
-    </app-layout>
-</template>
 <script>
 
 import Calendar from '../../Components/Calendar.vue'
@@ -29,6 +6,9 @@ import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router  } from "@inertiajs/vue3"
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+
+
 //import route from '../../ziggy'
 //import axios from 'axios'
 
@@ -36,8 +16,11 @@ export default {
     name: 'Books',
     components: {
         Calendar,
-        //AddAppointmentModal,
-        ModalCalendar
+        ModalCalendar,
+        AuthenticatedLayout 
+    },
+    props: {
+        errors: Object,
     },
     data() {
         return {
@@ -72,6 +55,17 @@ export default {
         //console.log('el user id es ' + form.user_id)
         return;
     },
+    resetModal() {
+        
+        this.newEvent = {
+        title : '',
+        date_at: '',
+        end_at: '',
+        color: '',
+        user_id: ''
+        }
+       
+    },
     saveAppt(param){
         //console.log(param)
         if(param.title === ''){
@@ -94,7 +88,13 @@ export default {
             console.log('capturamos este error ', error.message);
         });*/
         router.post(route('appointments.store'), param, { 
-            onSuccess: this.closeModal(),//() => page => {
+            onSuccess: page => {
+                if(Object.entries(page.props.errors).length === 0){
+                    console.log(page.props.errors);
+                    this.closeModal();
+                    this.resetModal()
+                }
+            },
                 
                /* new notie.alert({
                 text: `Appointment has been created.`,
@@ -147,7 +147,26 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>
+<template>
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Calendar</h2>
+        </template>  
+      
+        <div v-if="$page.props.flash.success"
+      class="alert alert-dismissible fade show items-center justify-between rounded-lg bg-green-500 py-4 px-6 text-center text-white md:flex md:text-left">
+      <div class="mb-4 flex flex-wrap items-center justify-center md:mb-0 md:justify-start">
+        {{ $page.props.flash.success }}
+      </div>
+    </div>
+        
+        <div class="py-12">
+        <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <Calendar @dateClick="dateClick"/>
+            </div>
+        </div>
+    </div>
+    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt"></modal-calendar>
+</AuthenticatedLayout>
+</template>

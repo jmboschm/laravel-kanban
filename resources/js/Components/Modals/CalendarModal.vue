@@ -93,7 +93,7 @@
                     placeholder="Ingresa el motivo de la consulta"
                     autocomplete="off"
                   />
-                  <div v-if="$page.errors" class="text-red-500">{{ $page.errors.title[0]}}</div>
+                  <div v-if="$page.props.errors.title" class="text-red-500">{{ $page.props.errors.title[0]}}</div>
                 </div>
                 <div class="mb-4">
                   <label

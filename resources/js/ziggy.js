@@ -89,6 +89,7 @@ const Ziggy = {
     'password.update': { uri: 'password', methods: ['PUT'] },
     logout: { uri: 'logout', methods: ['POST'] },
     'appointments': { uri: 'appointments', methods: ['POST'] },
+    'events': { uri: 'events', methods: ['GET'] },
   },
 };
 

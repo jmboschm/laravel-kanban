@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AppointmentRequest;
 
 class AppointmentController extends Controller
 {
@@ -32,25 +33,27 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AppointmentRequest $request)
     {
         /* If user is admin asign to specific ID else assign to authUser */
        /* $assignee =
           ($request->user_id && auth()->user()->isAdmin ?
           $request->user_id :
           $assignee = auth()->user()->id);
-*/
+*/          
+
         //dd($request->all());
-       /* Appointment::create([
+        
+        Appointment::create([
           'start_time' => $request->date_at,
           'finish_time' => $request->end_at,
           'title' => $request->title,
           'color' => $request->color,
           'user_id' => $request->user_id,
         ]);
-*/
+
     
-        return redirect()->back()->with(['message'=>'Reservado con éxito']);
+        return redirect()->back()->with(['success'=>'Reservado con éxito']);
     }
 
     /**
