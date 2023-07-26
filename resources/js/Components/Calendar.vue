@@ -1,7 +1,4 @@
 <template>
-  <div v-if="$page.props.flash.message" class="alert">
-        {{ $page.props.flash.message }}
-    </div>
     <FullCalendar :options="calendarOptions"/>    
 </template>
 <script>

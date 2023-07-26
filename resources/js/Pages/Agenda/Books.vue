@@ -3,7 +3,14 @@
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Calendar</h2>   
             <span>{{ $page.user }}</span>
-        </template>    
+        </template>  
+        <div
+      class="alert alert-dismissible fade show items-center justify-between rounded-lg bg-green-500 py-4 px-6 text-center text-white md:flex md:text-left">
+      <div class="mb-4 flex flex-wrap items-center justify-center md:mb-0 md:justify-start" v-if="$page.props.flash.message">
+        {{ $page.props.flash.message }}
+      </div>
+    </div>
+        
         <div class="py-12">
         <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -22,7 +29,6 @@ import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router  } from "@inertiajs/vue3"
-import notie from 'notie'
 //import route from '../../ziggy'
 //import axios from 'axios'
 
