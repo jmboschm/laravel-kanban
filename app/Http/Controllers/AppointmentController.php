@@ -6,13 +6,17 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AppointmentRequest;
+use App\Models\User;
+
 
 class AppointmentController extends Controller
 {
 
     public function __invoke(Request $request)
     {
-        
+        /*return Inertia::render('Agenda/Books',[
+            'users' => User::all()    
+        ]);*/
     }
     /**
      * Display a listing of the resource.

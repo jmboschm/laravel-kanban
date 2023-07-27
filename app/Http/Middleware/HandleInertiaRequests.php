@@ -46,6 +46,9 @@ class HandleInertiaRequests extends Middleware
                 fn () => $request->session()->get('errors') ? $request->session()->get('errors')->getBag('default')->getMessages()
                 : (Object)[]
             ],
+            /*'users' => function () {
+                 return User::all();
+            },*/
         ]);
     }
 }

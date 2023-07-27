@@ -51,7 +51,7 @@ export default {
         let endTime = obj.dateStr
         this.newEvent.end_at = endTime
         this.newEvent.color = ''
-        this.newEvent.user_id = page.props.auth.user.id
+        this.newEvent.user_id = ''//page.props.user.id
         //console.log('el user id es ' + form.user_id)
         return;
     },
@@ -141,7 +141,7 @@ export default {
             start: dateApt,
             end: dateEnd, 
             color: colorVacation,
-            user_id: page.props.auth.user.id 
+            user_id: form.user_id
         }
     }
     }

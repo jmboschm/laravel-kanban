@@ -31,16 +31,10 @@
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class>
                 <div class="mb-4">
-                  <label
-                    for="exampleFormControlInput1"
-                    class="block text-gray-700 text-sm font-bold mb-2"
-                  >Buscar Usuario</label>
+                  
                   <!-- Buscador way -->
-                  <div class="flex flex-col relative">
-                    <div class="w-full">
-                      <div class="my-2 p-1 bg-white flex border border-gray-200 rounded">
-                        <div class="flex flex-auto flex-wrap"></div>
-                        <input
+                  
+                        <!--<input
                           placeholder="Buscar Usuario"
                           class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
                         />
@@ -66,9 +60,24 @@
                               <polyline points="18 15 12 9 6 15" />
                             </svg>
                           </button>
+                        </div>-->
+                        <!-- start select -->
+                        <div class="col-span-6 sm:col-span-3">
+                          <label
+                            for="user_id"
+                            class="block text-sm font-medium leading-5 text-gray-700"
+                          >Usuario</label>
+                          <select
+                            v-model="form.user_id"
+                            id="user_id"
+                            class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                          >
+                          <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
+                          </option>
+                          </select>
                         </div>
-                      </div>
-                    </div>
+                        <!-- end select -->
                     <!-- Options select -->
                     <div
                       class="absolute shadow bg-white top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto svelte-5uyqqj"
@@ -76,7 +85,7 @@
                       <!-- partial component -->
                     </div>
                     <!-- end Options -->
-                  </div>
+                  
                   <!-- comienzo input -->
                 </div>
                 <!-- end Buscador -->
@@ -173,7 +182,12 @@
         default: ()=>{}
       }
     },
-    components: {
+    data(){
+      return{
+        users: [
+                
+        ]
+      }
     },
     methods:{
       closeModal(){
@@ -181,8 +195,21 @@
       },
       store(form){
         this.$emit('saveAppt',form)
-      }
-    }
+      },
+    },
+    mounted() {
+	        // I absctracted my API calls, this would be the same as:
+	        // axios.get('/users').then( .... ) ...
+	        axios.get('/users')
+	            .then(({
+	                data
+	            }) => {
+	                this.users = data
+	            })
+	            .catch(error => {
+	                this.users = []
+	            })
+	    }
   };
   </script>
   

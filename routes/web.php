@@ -13,6 +13,7 @@ use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardColumnCreateController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AppointmentController;
+use App\Models\User;
 
 
 
@@ -62,6 +63,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('cards.reorder');
 
     Route::get('/events', SearchController::class)->name('events');
+
+    Route::get('/users', function() {
+        return User::all();
+    });
 
     //Route::post('/appointment', AppointmentController::class)->name('appointment.store');
 
