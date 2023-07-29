@@ -69,8 +69,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     //Route::post('/appointment', AppointmentController::class)->name('appointment.store');
-
-     Route::resource('appointments', AppointmentController::class);
+    Route::get('/appointments.filter', [AppointmentController::class,'filter'])->name('appointments.filter');
+     Route::resource('appointments', AppointmentController::class)->except('show');
     //Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
 });
 

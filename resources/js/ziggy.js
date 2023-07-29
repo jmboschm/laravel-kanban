@@ -88,8 +88,11 @@ const Ziggy = {
     'password.confirm': { uri: 'confirm-password', methods: ['GET', 'HEAD'] },
     'password.update': { uri: 'password', methods: ['PUT'] },
     logout: { uri: 'logout', methods: ['POST'] },
-    'appointments': { uri: 'appointments', methods: ['POST','GET'] },
+    'appointments': { uri: 'appointments', methods: ['POST','GET','PUT'] },
     'events': { uri: 'events', methods: ['GET'] },
+    'appointments.filter': { uri: 'appointments', methods: ['GET']},
+    //'appointments.show': { uri: 'appointments/{appointments}', methods: ['GET']},
+   // 'appointments.show': { uri: 'appointments.show', methods: ['GET']},
   },
 };
 

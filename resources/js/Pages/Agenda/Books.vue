@@ -1,17 +1,14 @@
 <script>
 
-import Calendar from '../../Components/Calendar.vue'
-import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
-//import AddAppointmentModal from '../../Components/Modals/AddAppointmentModal.vue'
+
 import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router  } from "@inertiajs/vue3"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { ref } from 'vue'
+import Calendar from '../../Components/Calendar.vue'
+import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
 
-
-//import route from '../../ziggy'
-//import axios from 'axios'
 
 export default {
     name: 'Books',
@@ -38,22 +35,47 @@ export default {
         dateClick(arg){
             this.$data.showModal = true;
             this.setModalOpen(arg);
-            //console.log('recibiendo datos: ',arg)
+        },
+        handleEventClick(eventInfo){
+            //this.$data.showModal = true;
+            //this.setModalOpen(arg);
+
+            let updatedData = {
+              date_at: eventInfo.event._instance.range.start,
+              end_at: eventInfo.event._instance.range.end
+            }
+        let start_time = updatedData.date_at.toISOString().split("T")[0];
+        let finish_time = updatedData.end_at.toISOString().split("T")[0];
+        let title = eventInfo.el.fcSeg.eventRange.def.title;
+        //console.log(eventInfo);
+        let params = { start: [start_time], finish: [finish_time], title: [title] }
+        //console.log(datos);
+        axios.get(route('appointments.filter'), {params}).then( ({data}) => {
+          //this.$data.showModal=true;
+          //this.setModalOpen(data);
+          //console.log(data);
+          var updatedEventData = {
+            user_id: data[0].user_id,
+            start_time: data[0].start_time,
+            finish_time: data[0].finish_time,
+            color: data[0].color,
+          }
+          console.log(updatedEventData);
+          this.$data.showModal = true
+          this.setModalOpen(updatedEventData)
+        });
         },
     closeModal() {
         this.$data.showModal = false
     },
     setModalOpen(obj) {
         this.$data.showModal = true
-        //console.log(obj);
-        const page = usePage()
-        //let dateAndTime = obj.dateStr
+        
         this.newEvent.date_at = obj.dateStr
         let endTime = obj.dateStr
         this.newEvent.end_at = endTime
         this.newEvent.color = ''
-        this.newEvent.user_id = ''//page.props.user.id
-        //console.log('el user id es ' + form.user_id)
+        this.newEvent.user_id = ''
         return;
     },
     resetModal() {
@@ -68,26 +90,7 @@ export default {
        
     },
     saveAppt(param){
-        //console.log(param)
-       // if(param.title === ''){
-       //     alert('No puedes dejar el campo titulo vacio')
-       // }
-        //seteamos una variable
-      //  let dataAppt = this.setTypeVacation(param)
-      //  console.log('aixo es datappt ' + dataAppt);
-        //console.log(dataAppt);
-     /*   $this.Inertia.post(route('appointment.store'), dataAppt, {
-            onSuccess: page =>
-                if(Object.entries(page.props.errors).length === 0){
-                    this.closeModal()
-                }
-            });
         
-        //capturamos excepciones
-        /*$this.Inertia.on("error", event => {
-            event.preventDefault();
-            console.log('capturamos este error ', error.message);
-        });*/
         router.post(route('appointments.store'), param, { 
             onSuccess: page => {
                 if(Object.entries(page.props.errors).length === 0){
@@ -97,45 +100,13 @@ export default {
                 }
             },
                 
-               /* new notie.alert({
-                text: `Appointment has been created.`,
-                time: 2,
-                type: 'success'
-            }).show()*/
-            //},
-
-         /*   onError: () => errors  => {
-                errors.preventDefault();
-                console.log('capturamos este error ', errors.message);
-            }*/
         });
-        /*
-        const form = useForm({dataAppt});
-        
-        form.submit('post',route('appointment.store'), {
-            preserveState: true,
-            replace: true,
-            onSuccess: () => this.closeModal()
-        });
-        form.submit('post',route('appointment.store'), {
-        onError: () => event => {
-            event.preventDefault();
-            console.log('capturamos este error ', error.message);
-        }});*/
     
     },
     setTypeVacation(form) {
         let dateApt = form.date_at;
         let dateEnd = form.end_at;
         let colorVacation = form.color
-
-        //let initSesion = new Date(dateApt);
-        const page = usePage()
-        //const getSecondsSesion = initSesion.getSeconds() + form.session;
-
-        //initSesion.setSeconds(getSecondsSesion);
-
-     //   console.info(initSesion.getMonth());
 
         return {
             title: '',
@@ -145,7 +116,20 @@ export default {
             user_id: form.user_id
         }
     },
-    }
+    deleteAppt(param){
+        
+        router.post(route('appointments.destroy'), param, {
+            onSuccess: page => {
+            this.closeModal()
+            this.resetModal()
+        }
+        });         
+    },
+                
+        //});
+    
+    },
+    
 }
 </script>
 <template>
@@ -164,10 +148,10 @@ export default {
         <div class="py-12">
         <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <Calendar @dateClick="dateClick"/>
+                <Calendar @dateClick="dateClick" @eventClick="handleEventClick"/>
             </div>
         </div>
     </div>
-    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt"></modal-calendar>
+    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" @eventClick="handleEventClick"></modal-calendar>
 </AuthenticatedLayout>
 </template>

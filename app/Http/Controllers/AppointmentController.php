@@ -34,7 +34,7 @@ class AppointmentController extends Controller
             $event['id'] = $appointment->id;
             $event['title'] = $appointment->title;
             $event['start'] = $appointment->start_time;
-            $event['end'] = $appointment->finisih_time;
+            $event['end'] = $appointment->finish_time;
             $event['color'] = $appointment->color;
 
             $events[] = $event;
@@ -72,8 +72,8 @@ class AppointmentController extends Controller
         ]);*/   
         //dd($request->all());
      //   $validated = $request->validated();
-        $start_time = Carbon::parse($request->date_at)->format('Y-m-d');
-        $finish_time = Carbon::parse($request->date_at)->format('Y-m-d');
+        $start_time = Carbon::parse($request->date_at);
+        $finish_time = Carbon::parse($request->end_at)->addDay();
         
         
         $title = User::find($request->user_id);
@@ -96,7 +96,10 @@ class AppointmentController extends Controller
      */
     public function show(Appointment $appointment)
     {
-        //
+        dd($appointment);
+        return Appointment::whereBetween('start', [$request->date_at, $request->end_at])
+                  ->with('user:id,name,lastname')
+                  ->get();
     }
 
     /**
@@ -104,7 +107,7 @@ class AppointmentController extends Controller
      */
     public function edit(Appointment $appointment)
     {
-        //
+        return Inertia::render('Appointment/Edit', compact('appointment'));
     }
 
     /**
@@ -112,12 +115,12 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
-        if ($appointment->user_id === $user->id || $user->isAdmin) {
+        //$user = auth()->user();
+        //if ($appointment->user_id === $user->id || $user->isAdmin) {
           $appointment->update($request->all());
-        } else {
-          abort(403);
-        }
+        //} else {
+        //  abort(403);
+        //}
     }
 
     /**
@@ -125,12 +128,12 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        $user = auth()->user();
-        if ($appointment->user_id === $user->id || $user->isAdmin) {
+        //$user = auth()->user();
+        //if ($appointment->user_id === $user->id || $user->isAdmin) {
             $appointment->delete();
-        } else {
-            abort(403);
-        }
+        //} else {
+        //    abort(403);
+       // }
     }
 
     /**
@@ -141,14 +144,11 @@ class AppointmentController extends Controller
      */
     public function filter(Request $request)
     {
-        if (auth()->user()->isAdmin) {
-          return Appointment::whereBetween('start', [$request->start, $request->end])
-                  ->with('user:id,name,lastname')
-                  ->get();
-        } else {
-          return Appointment::whereBetween('start', [$request->start, $request->end])
-                  ->where('user_id', auth()->user()->id)
-                  ->get();
-        }
+        
+       // dd($request->all());
+        return Appointment::whereBetween('start_time', [$request->start, $request->finish])->where('title',$request->title)
+        ->with('user:id,name,email')
+        ->get();
+        
     }
 }

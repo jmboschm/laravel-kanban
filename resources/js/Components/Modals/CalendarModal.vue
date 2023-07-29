@@ -39,12 +39,14 @@
                           for="user_id"
                           class="block text-sm font-medium leading-5 text-gray-700"
                         >Usuario</label>
+                        <!--//form.user_id-->
                         <select
                           id="user_id"
-                          v-model="form.user_id"
+                          v-model="form.user_id" 
+                          
                           class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                         >
-                        <option v-for="user in users" :key="user.id" :value="user.id">
+                        <option v-for="user in users" :key="user.id" :value="user.id" :selected="user.id">
                                       {{ user.name }}
                         </option>
                         </select>
@@ -60,35 +62,13 @@
                   <div v-if="$page.props.errors.user_id" class="text-red-500">{{ $page.props.errors.user_id[0]}}</div>
                 <!-- comienzo input -->
               </div>
-              <!-- end Buscador -->
-              <!--<div class="mb-4">
-                <label
-                  for="exampleFormControlInput1"
-                  class="block text-gray-700 text-sm font-bold mb-2"
-                >Motivo:</label>
-                <input
-                  id="exampleFormControlInput0"
-                  v-model="form.title"
-                  type="text"
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Ingresa el motivo de la consulta"
-                  autocomplete="off"
-                />
-                <div v-if="$page.props.errors.title" class="text-red-500">{{ $page.props.errors.title[0]}}</div>
-              </div>-->
+              
               <div class="mb-4">
                 <label
                   for="exampleFormControlInput1"
                   class="block text-gray-700 text-sm font-bold mb-2"
                 >Fecha de Inicio</label>
-                <!--<input
-                  v-model="form.date_at"
-                  disabled="true"
-                  type="text"
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="exampleFormControlInput1"
-                  placeholder="Enter pass"
-                />-->
+               
                 <appdate-picker
                   v-model="form.date_at"
                   placeholder="Select Date"
@@ -107,14 +87,7 @@
                   for="exampleFormControlInput2"
                   class="block text-gray-700 text-sm font-bold mb-2"
                 >Fecha de Finalización</label>
-                <!--<input
-                  v-model="form.end_at"
-                  disabled="true"
-                  type="text"
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="exampleFormControlInput2"
-                />-->
-              
+                
                 <appdate-picker
                   v-model="form.end_at"
                   placeholder="Select Date"
@@ -155,6 +128,7 @@
             <button
               type="button"
               class="inline-flex justify-center w-full border border-red-500 text-red-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:text-white hover:bg-red-600 focus:outline-none focus:shadow-outline"
+              @click.prevent="delete(form)"
             >Eliminar</button>
             <button
               type="button"
@@ -200,6 +174,11 @@ export default {
       users: [],
     }
   },
+  /*computed: {
+  form.user_id() {
+    return this.selectedUser?.id;
+  },
+},*/
   mounted() {
         axios.get('/users')
             .then(({
@@ -225,6 +204,12 @@ export default {
     },
     store(form){
       this.$emit('saveAppt',form)
+    },
+    delete(form){
+      this.$emit('deleteAppt',form)
+    },
+    handleEventClick(form){
+      this.$emit('editAppt',form)
     },
   },
 };
