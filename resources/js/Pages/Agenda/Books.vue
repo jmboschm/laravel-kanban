@@ -7,6 +7,7 @@ import formatTime from '../../Mixins/transformTime'
 import { usePage } from "@inertiajs/vue3"
 import { router  } from "@inertiajs/vue3"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import { ref } from 'vue'
 
 
 //import route from '../../ziggy'
@@ -68,9 +69,9 @@ export default {
     },
     saveAppt(param){
         //console.log(param)
-        if(param.title === ''){
-            alert('No puedes dejar el campo titulo vacio')
-        }
+       // if(param.title === ''){
+       //     alert('No puedes dejar el campo titulo vacio')
+       // }
         //seteamos una variable
       //  let dataAppt = this.setTypeVacation(param)
       //  console.log('aixo es datappt ' + dataAppt);
@@ -90,7 +91,7 @@ export default {
         router.post(route('appointments.store'), param, { 
             onSuccess: page => {
                 if(Object.entries(page.props.errors).length === 0){
-                    console.log(page.props.errors);
+                //    console.log(page.props.errors);
                     this.closeModal();
                     this.resetModal()
                 }
@@ -103,10 +104,10 @@ export default {
             }).show()*/
             //},
 
-            onError: () => errors  => {
+         /*   onError: () => errors  => {
                 errors.preventDefault();
                 console.log('capturamos este error ', errors.message);
-            }
+            }*/
         });
         /*
         const form = useForm({dataAppt});
@@ -137,13 +138,13 @@ export default {
      //   console.info(initSesion.getMonth());
 
         return {
-            title: form.title,
+            title: '',
             start: dateApt,
             end: dateEnd, 
             color: colorVacation,
             user_id: form.user_id
         }
-    }
+    },
     }
 }
 </script>

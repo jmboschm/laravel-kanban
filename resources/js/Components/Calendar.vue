@@ -12,6 +12,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import esLocale from '@fullcalendar/core/locales/es'
 import { usePage } from "@inertiajs/vue3"
+import iCalendarPlugin from '@fullcalendar/icalendar'
 
 //import AddAppointmentModal from './Modals/AddAppointmentModal.vue'
 //import notie from 'notie'
@@ -26,7 +27,7 @@ emits: {'dateClick': null},
     data() {
         return {
         calendarOptions : {
-            plugins: [ dayGridPlugin,timeGridPlugin, listPlugin,interactionPlugin],
+            plugins: [ dayGridPlugin,timeGridPlugin, listPlugin,interactionPlugin,iCalendarPlugin],
             headerToolbar: {
                 left: "prev,next today",
                 center: "title",
@@ -40,18 +41,38 @@ emits: {'dateClick': null},
             defaultAllDay: true,
             timeZone: 'Europe/Madrid',
             height: "auto",
-            /*calendarEvents:
-            {
-                url: '/appointments/filter'
-            },*/
+            events: [],
             dateClick: this.handleDateClick,
+            eventSources: [
+            {
+              url : '/calendarifestius_ca.ics',
+              format : 'ics',
+              color: 'darkred',
+            }
+            ]
         }
         }
+    },
+    beforeMount(){
+      this.$data.calendarOptions.events = {
+        url: route('appointments.index'),
+        method: 'GET',
+        failure: error => {
+          console.log('tenemos este error: ', error.message);
+        }
+      }
     },
     methods: {
         handleDateClick(clickInfo){
             this.$emit('dateClick',clickInfo)
-        }/*,
+        },
+        getEvents: function(){
+          axios.get('/appointments').then((response) => {
+            this.calendarOptions.events = response.data;
+          }, (error)=> {
+          })
+            
+        },/*,
         handleEventDrop(e) {
             let updatedEventData = {
               start: e.event.start,
@@ -119,11 +140,10 @@ emits: {'dateClick': null},
               }).show()
             })
         },
-
+*/
         rerenderCalendar() {
           this.$refs.fullCalendar.getApi().refetchEvents()
-        }*/
-        
-    }
+        }
+    },
 }
 </script>

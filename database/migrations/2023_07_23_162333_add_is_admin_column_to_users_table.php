@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('isAdmin')->default(false);
-            $table->boolean('enabled')->deefault(true);
+            $table->boolean('enabled')->default(true);
         });
     }
 

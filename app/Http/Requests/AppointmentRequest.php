@@ -23,14 +23,23 @@ class AppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required']
+            'title' => ['required'],
+            'start_time' => ['required'],
+            'finish_time' => ['required'],
+            'color' => ['required'],
+            'user_id' => ['required'],
+
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'title.required' => 'Debes rellenar este campo'
+            'start_time.required' => 'Debes rellenar este campo',
+            'title.required' => 'Debes rellenar este campo',
+            'finish_time.required' => 'Debes rellenar este campo',
+            'color.required' => 'Debes rellenar este campo',
+            'user_id.required' => 'Debes rellenar este campo',
         ];
     }
 }

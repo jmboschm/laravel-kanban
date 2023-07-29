@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AppointmentRequest;
 use App\Models\User;
+use Validator;
+use Carbon\Carbon;
 
 
 class AppointmentController extends Controller
@@ -23,7 +25,22 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        //
+        $appointments = Appointment::all();
+       // dd($appointments);
+        $events = [];
+
+        foreach($appointments as $appointment) {
+            $event = [];
+            $event['id'] = $appointment->id;
+            $event['title'] = $appointment->title;
+            $event['start'] = $appointment->start_time;
+            $event['end'] = $appointment->finisih_time;
+            $event['color'] = $appointment->color;
+
+            $events[] = $event;
+        }
+
+        return response()->json($events);
     }
 
     /**
@@ -37,21 +54,35 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AppointmentRequest $request)
+    public function store(Request $request)
     {
         /* If user is admin asign to specific ID else assign to authUser */
        /* $assignee =
           ($request->user_id && auth()->user()->isAdmin ?
           $request->user_id :
           $assignee = auth()->user()->id);
-*/          
+       
+        $this->validate($request, [
+            'title' => 'required',
+            'start_time' => 'required',
+            'finish_time' => 'required',
+            'color' => 'required',
+            'user_id' => 'required',
 
+        ]);*/   
         //dd($request->all());
+     //   $validated = $request->validated();
+        $start_time = Carbon::parse($request->date_at)->format('Y-m-d');
+        $finish_time = Carbon::parse($request->date_at)->format('Y-m-d');
         
+        
+        $title = User::find($request->user_id);
+        
+      //  dd($title->name);
         Appointment::create([
-          'start_time' => $request->date_at,
-          'finish_time' => $request->end_at,
-          'title' => $request->title,
+          'start_time' => $start_time,//$request->date_at,
+          'finish_time' => $finish_time,//$request->end_at,
+          'title' => $title->name,//$request->title,
           'color' => $request->color,
           'user_id' => $request->user_id,
         ]);

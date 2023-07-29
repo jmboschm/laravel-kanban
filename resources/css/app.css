@@ -12,3 +12,6 @@
 .ghost > div {
     visibility: hidden;
 }
+.vuejs3-datepicker__calendar {
+    display: contents;
+}

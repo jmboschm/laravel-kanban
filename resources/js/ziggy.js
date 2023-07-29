@@ -1,5 +1,5 @@
 const Ziggy = {
-  url: 'http://kanban.test',
+  url: 'http://feina.test',
   port: 80,
   defaults: {},
   routes: {
@@ -88,7 +88,7 @@ const Ziggy = {
     'password.confirm': { uri: 'confirm-password', methods: ['GET', 'HEAD'] },
     'password.update': { uri: 'password', methods: ['PUT'] },
     logout: { uri: 'logout', methods: ['POST'] },
-    'appointments': { uri: 'appointments', methods: ['POST'] },
+    'appointments': { uri: 'appointments', methods: ['POST','GET'] },
     'events': { uri: 'events', methods: ['GET'] },
   },
 };
