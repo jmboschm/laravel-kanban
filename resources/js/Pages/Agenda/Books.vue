@@ -8,6 +8,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import { ref } from 'vue'
 import Calendar from '../../Components/Calendar.vue'
 import ModalCalendar from '../../Components/Modals/CalendarModal.vue'
+import axios from 'axios'
 
 
 export default {
@@ -17,6 +18,7 @@ export default {
         ModalCalendar,
         AuthenticatedLayout 
     },
+    emits: {'deleteAppt':null,'editAppt':null,'closeModal':true,'saveAppt':null},
     props: {
         errors: Object,
     },
@@ -27,7 +29,8 @@ export default {
                 title: '',
                 date_at: '',
                 end_at: '',
-                color: ''
+                color: '',
+                user_id: ''
             }
         }
     },
@@ -37,9 +40,7 @@ export default {
             this.setModalOpen(arg);
         },
         handleEventClick(eventInfo){
-            //this.$data.showModal = true;
-            //this.setModalOpen(arg);
-
+          //  console.log('handleClickEventInfo :',eventInfo);
             let updatedData = {
               date_at: eventInfo.event._instance.range.start,
               end_at: eventInfo.event._instance.range.end
@@ -47,22 +48,23 @@ export default {
         let start_time = updatedData.date_at.toISOString().split("T")[0];
         let finish_time = updatedData.end_at.toISOString().split("T")[0];
         let title = eventInfo.el.fcSeg.eventRange.def.title;
-        //console.log(eventInfo);
-        let params = { start: [start_time], finish: [finish_time], title: [title] }
+      
+        let appointmentId = eventInfo.el.fcSeg.eventRange.def.publicId;
+        console.log(appointmentId);
+        let params = { id: [appointmentId], start: [start_time], finish: [finish_time], title: [title] }
         //console.log(datos);
         axios.get(route('appointments.filter'), {params}).then( ({data}) => {
-          //this.$data.showModal=true;
-          //this.setModalOpen(data);
-          //console.log(data);
+         
           var updatedEventData = {
             user_id: data[0].user_id,
             start_time: data[0].start_time,
             finish_time: data[0].finish_time,
             color: data[0].color,
           }
-          console.log(updatedEventData);
+        //  console.log(updatedEventData);
           this.$data.showModal = true
           this.setModalOpen(updatedEventData)
+          //axios.delete(route('appointments.delete'),{updatedEventData});
         });
         },
     closeModal() {
@@ -74,9 +76,9 @@ export default {
         this.newEvent.date_at = obj.dateStr
         let endTime = obj.dateStr
         this.newEvent.end_at = endTime
-        this.newEvent.color = ''
-        this.newEvent.user_id = ''
-        return;
+        this.newEvent.color = obj.color
+        this.newEvent.user_id = obj.user_id
+        
     },
     resetModal() {
         
@@ -92,14 +94,7 @@ export default {
     saveAppt(param){
         
         router.post(route('appointments.store'), param, { 
-            onSuccess: page => {
-                if(Object.entries(page.props.errors).length === 0){
-                //    console.log(page.props.errors);
-                    this.closeModal();
-                    this.resetModal()
-                }
-            },
-                
+            onSuccess: this.closeModal()
         });
     
     },
@@ -118,11 +113,11 @@ export default {
     },
     deleteAppt(param){
         
+        console.log('aqui esta la destruccio del param ', param);
+
         router.post(route('appointments.destroy'), param, {
-            onSuccess: page => {
+            onSuccess: 
             this.closeModal()
-            this.resetModal()
-        }
         });         
     },
                 
@@ -152,6 +147,6 @@ export default {
             </div>
         </div>
     </div>
-    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" @eventClick="handleEventClick"></modal-calendar>
+    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" @eventClick="handleEventClick" @deleteAppt="deleteAppt" @editAppt="editAppt"></modal-calendar>
 </AuthenticatedLayout>
 </template>

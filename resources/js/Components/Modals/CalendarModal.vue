@@ -41,9 +41,11 @@
                         >Usuario</label>
                         <!--//form.user_id-->
                         <select
-                          id="user_id"
-                          v-model="form.user_id" 
                           
+                          v-model="form.user_id"
+                          @getIdByUser="getIdByUser"
+                        :label="'All users'"
+                        :usersData="users"
                           class="mt-1 block form-select w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                         >
                         <option v-for="user in users" :key="user.id" :value="user.id" :selected="user.id">
@@ -128,7 +130,7 @@
             <button
               type="button"
               class="inline-flex justify-center w-full border border-red-500 text-red-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:text-white hover:bg-red-600 focus:outline-none focus:shadow-outline"
-              @click.prevent="delete(form)"
+              @click.prevent="remove(form)"
             >Eliminar</button>
             <button
               type="button"
@@ -171,14 +173,10 @@ export default {
   },
   data(){
     return{
+      user_id: '',
       users: [],
     }
   },
-  /*computed: {
-  form.user_id() {
-    return this.selectedUser?.id;
-  },
-},*/
   mounted() {
         axios.get('/users')
             .then(({
@@ -205,11 +203,16 @@ export default {
     store(form){
       this.$emit('saveAppt',form)
     },
-    delete(form){
+    remove(form){
       this.$emit('deleteAppt',form)
     },
     handleEventClick(form){
-      this.$emit('editAppt',form)
+      this.$emit('editAppt',form[1])
+    },
+    getIdByUser(user) {
+      // get user id
+      console.log(user, "kks");
+      this.user_id = user.id;
     },
   },
 };

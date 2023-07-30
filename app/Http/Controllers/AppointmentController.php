@@ -9,6 +9,7 @@ use App\Http\Requests\AppointmentRequest;
 use App\Models\User;
 use Validator;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 
 class AppointmentController extends Controller
@@ -26,7 +27,7 @@ class AppointmentController extends Controller
     public function index()
     {
         $appointments = Appointment::all();
-       // dd($appointments);
+       
         $events = [];
 
         foreach($appointments as $appointment) {
@@ -96,10 +97,7 @@ class AppointmentController extends Controller
      */
     public function show(Appointment $appointment)
     {
-        dd($appointment);
-        return Appointment::whereBetween('start', [$request->date_at, $request->end_at])
-                  ->with('user:id,name,lastname')
-                  ->get();
+        return Inertia::render('Appointment/Show');
     }
 
     /**
@@ -126,14 +124,20 @@ class AppointmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Appointment $appointment)
+    public function destroy(Request $request)
     {
-        //$user = auth()->user();
-        //if ($appointment->user_id === $user->id || $user->isAdmin) {
+        $appointment = Appointment::where('start_time','=',$request->end_at)
+        ->where('finish_time','=',$request->end_at)
+        ->where('user_id','=',$request->user_id)
+        ->where('title','=',$request->title)->find()->get();
+        $user = auth()->user();
+        if ($appointment->user_id === $user->id || $user->isAdmin) {
             $appointment->delete();
-        //} else {
-        //    abort(403);
-       // }
+            return back()->with('success', 'El proceso ha sido borrado');
+        }
+         else {
+            abort(403);
+        }
     }
 
     /**
@@ -142,13 +146,23 @@ class AppointmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function filter(Request $request)
+    public function filter(Request $request, $type)
     {
         
-       // dd($request->all());
-        return Appointment::whereBetween('start_time', [$request->start, $request->finish])->where('title',$request->title)
-        ->with('user:id,name,email')
+       //dd($request->all());
+       //$appointment = $request->all()->toArray();
+      // $object = (object) $request;
+       //dd($request['parseado']['id'][0]);
+      if($type == 1){
+        return Appointment::findOrFail($request['parseado']['id'][0]);
+      } else {
+        //dd($request->all());
+        return Appointment::where('user_id',$request['parseado']['user_id'][0])
+        ->where('start_time',$request['parseado']['start'][0])
+        ->where('finish_time',$request['parseado']['end'][0])
         ->get();
+      }
+        
         
     }
 }

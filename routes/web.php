@@ -13,6 +13,10 @@ use App\Http\Controllers\ColumnDestroyController;
 use App\Http\Controllers\BoardColumnCreateController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AppointmentController;
+
+
+use App\Http\Controllers\EventController;
+
 use App\Models\User;
 
 
@@ -69,9 +73,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     //Route::post('/appointment', AppointmentController::class)->name('appointment.store');
-    Route::get('/appointments.filter', [AppointmentController::class,'filter'])->name('appointments.filter');
-     Route::resource('appointments', AppointmentController::class)->except('show');
+    Route::get('/appointments.filter/type/{type}', [AppointmentController::class,'filter'])->name('appointments.filter');
+     Route::resource('appointments', AppointmentController::class);
     //Route::get('/calendar', [CalendarController::class, 'show'])->name('calendar');
+    
+   
 });
 
 Route::middleware('auth')->group(function () {

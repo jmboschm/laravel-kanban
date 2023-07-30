@@ -1,7 +1,7 @@
 <template>
-    <FullCalendar :options="calendarOptions"/>   
+    <FullCalendar :options="calendarOptions" />   
   
-    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" @eventClick="handleEventClick"></modal-calendar>
+    <modal-calendar v-if="showModal" :form="newEvent" @closeModal="closeModal" @saveAppt="saveAppt" @deleteAppt="deleteAppt" @editAppt="editAppt"></modal-calendar>
 </template>
 <script>
 
@@ -11,17 +11,29 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
 import esLocale from '@fullcalendar/core/locales/es'
-import { usePage } from "@inertiajs/vue3"
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import axios from 'axios'
 import ModalCalendar from './Modals/CalendarModal.vue'
+import { defineEmits } from "vue";
+import { router  } from "@inertiajs/vue3"
 
+const emit = defineEmits(["deleteAppt","editAppt","closeModal","saveAppt"]);
 export default {
     components: {
         FullCalendar,
         ModalCalendar
     },
-emits: {'dateClick': null,'eventClick':null},
+/*emits: {'dateClick': null,
+        'eventClick':null,
+        'deleteAppt':{
+          id:'',
+        },
+        'editAppt':{
+          id:'',
+        },
+        'closeModal':true,
+        'saveAppt':{id:'',},
+      },*/
     data() {
         return {
           showModal: false,
@@ -31,6 +43,9 @@ emits: {'dateClick': null,'eventClick':null},
                 end_at: '',
                 color: ''
             },
+        //    details: [], //  My data that is filled in by the AJAX call
+        //    hash:  '',   //  My blank variable
+        //    url:  route('appointments.filter', hash),   //  route that needs the variable loaded by AJAX
         calendarOptions : {
             plugins: [ dayGridPlugin,timeGridPlugin, listPlugin,interactionPlugin,iCalendarPlugin],
             headerToolbar: {
@@ -70,6 +85,7 @@ emits: {'dateClick': null,'eventClick':null},
     },
     methods: {
         handleDateClick(clickInfo){
+          console.log('handleClickEventInfo : ',clickInfo);
             this.$emit('dateClick',clickInfo)
         },
         getEvents: function(){
@@ -80,7 +96,7 @@ emits: {'dateClick': null,'eventClick':null},
             
         },
         handleEventClick(eventInfo) {
-       
+        console.log(eventInfo);
         let updatedData = {
               date_at: eventInfo.event._instance.range.start,
               end_at: eventInfo.event._instance.range.end
@@ -88,20 +104,22 @@ emits: {'dateClick': null,'eventClick':null},
         let start_time = updatedData.date_at.toISOString().split("T")[0];
         let finish_time = updatedData.end_at.toISOString().split("T")[0];
         let title = eventInfo.el.fcSeg.eventRange.def.title;
-        console.log(eventInfo);
-        let params = { start: [start_time], finish: [finish_time], title: [title] }
-        //console.log(datos);
-        axios.get(route('appointments.filter'), {params}).then( ({data}) => {
+        let appointmentId = eventInfo.el.fcSeg.eventRange.def.publicId;
+        //console.log(appointmentId);
+        let params = { id: [appointmentId], start: [start_time], finish: [finish_time], title: [title], }
+        let parseado = JSON.parse(JSON.stringify(params));
+        axios.get(route('appointments.filter',{parseado,type:1})).then( ({data}) => {
           //this.$data.showModal=true;
           //this.setModalOpen(data);
-          console.log(data);
+          //console.log('aqui ve data: ',data);
           var updatedEventData = {
-            user_id: data[0].user_id,
-            start_time: data[0].start_time,
-            finish_time: data[0].finish_time,
-            color: data[0].color,
+            id: data.id,
+            user_id: data.user_id,
+            start_time: data.start_time,
+            finish_time: data.finish_time,
+            color: data.color,
           }
-          console.log(updatedEventData);
+          //console.log(updatedEventData);
           
           this.setModalOpen(updatedEventData);
         });
@@ -111,6 +129,7 @@ emits: {'dateClick': null,'eventClick':null},
        //   console.log(updatedEventData);
           
         },
+       
         setModalOpen(obj) {
           this.$data.showModal = true
           
@@ -128,13 +147,32 @@ emits: {'dateClick': null,'eventClick':null},
           this.$data.showModal = false
         },
         deleteAppt(param) {
-          router.post(route('appointments.destroy'), param, {
-            onSuccess: page => {
-            this.closeModal()
-            this.resetModal()
+          
+          let event = JSON.parse(JSON.stringify(param));
+          //console.log(appointment.date_at);
+          event = { start: [event.date_at], end: [event.end_at], title: [event.title], user_id: [event.user_id] }
+         // console.log('params: ', event);
+          let parseado = JSON.parse(JSON.stringify(event));
+          axios.get(route('appointments.filter', {parseado , type: 2}
+            
+          ))
+          .then( ({data}) => {
+          console.log('aqui ve data: ', data[0]);
+          var updatedEventData = {
+            id: data[0].id,
+            user_id: data[0].user_id,
+            start_time: data[0].start_time,
+            finish_time: data[0].finish_time,
+            color: data[0].color,
           }
-          }); 
+          console.log('vaig a borrar: ', updatedEventData);
+          router.delete(route('appointments.destroy',{appointment: updatedEventData['id']}), {
+            onSuccess: this.closeModal()
+          });
+        });
+           
         },
+      
         /*,
         handleEventDrop(e) {
             let updatedEventData = {
