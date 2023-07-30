@@ -166,7 +166,7 @@ export default {
             color: data[0].color,
           }
           console.log('vaig a borrar: ', updatedEventData);
-          router.delete(route('appointments.destroy',{appointment: updatedEventData['id']}), {
+          router.delete(route('appointments.destroy',{appointment: data[0]}), {
             onSuccess: this.closeModal()
           });
         });

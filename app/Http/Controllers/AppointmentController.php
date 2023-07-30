@@ -124,20 +124,21 @@ class AppointmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Appointment $appointment)
     {
-        $appointment = Appointment::where('start_time','=',$request->end_at)
+       // dd($appointment);
+       /* $appointment = Appointment::where('start_time','=',$request->end_at)
         ->where('finish_time','=',$request->end_at)
         ->where('user_id','=',$request->user_id)
-        ->where('title','=',$request->title)->find()->get();
-        $user = auth()->user();
-        if ($appointment->user_id === $user->id || $user->isAdmin) {
+        ->where('title','=',$request->title)->find()->get();*/
+      //  $user = auth()->user();
+      //  if ($appointment->user_id === $user->id || $user->isAdmin) {
             $appointment->delete();
-            return back()->with('success', 'El proceso ha sido borrado');
-        }
-         else {
-            abort(403);
-        }
+            return back()->with('success', 'El proceso ha sido borrado con éxito');
+      //  }
+      //   else {
+      //      abort(403);
+      //  }
     }
 
     /**
