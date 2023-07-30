@@ -117,14 +117,14 @@ class AppointmentController extends Controller
         //if ($appointment->user_id === $user->id || $user->isAdmin) {
             //dd($request->all());
             $start_time = Carbon::parse($request->start_time);
-            $finish_time = Carbon::parse($request->finish_time)->addDay();
+            $finish_time = Carbon::parse($request->finish_time);
             $appointment->update([
                 'id' => $request->id,
                 'user_id' => $request->user_id,
                 'color' => $request->color,
                 'start_time' => $start_time,
                 'finish_time' => $finish_time]);
-          return back()->with('success', 'El proceso ha sido borrado con éxito');
+          return redirect()->back()->with('success', 'El proceso ha sido actualizado con éxito');
         //} else {
         //  abort(403);
         //}
@@ -143,7 +143,7 @@ class AppointmentController extends Controller
       //  $user = auth()->user();
       //  if ($appointment->user_id === $user->id || $user->isAdmin) {
             $appointment->delete();
-            return back()->with('success', 'El proceso ha sido borrado con éxito');
+            return redirect()->back()->with('success', 'El proceso ha sido borrado con éxito');
       //  }
       //   else {
       //      abort(403);

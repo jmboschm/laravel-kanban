@@ -68,7 +68,7 @@ export default {
               url : '/calendarifestius_ca.ics',
               format : 'ics',
               color: 'darkred',
-            }
+            },
             ]
         }
         }
@@ -84,7 +84,7 @@ export default {
     },
     methods: {
         handleDateClick(clickInfo){
-          console.log('handleClickEventInfo : ',clickInfo);
+          //console.log('handleClickEventInfo : ',clickInfo);
             this.$emit('dateClick',clickInfo)
         },
         getEvents: function(){
@@ -95,7 +95,7 @@ export default {
             
         },
         handleEventClick(eventInfo) {
-        console.log(eventInfo);
+        //console.log(eventInfo);
         let updatedData = {
               date_at: eventInfo.event._instance.range.start,
               end_at: eventInfo.event._instance.range.end
@@ -132,7 +132,6 @@ export default {
        
         setModalOpen(obj) {
           this.$data.showModal = true
-          
           
             this.newEvent.title = obj.title,
             this.newEvent.date_at = obj.start_time,
@@ -196,7 +195,7 @@ export default {
           this.user_id = param.user_id;
           this.color = param.color;
 
-          console.log(param);
+          //console.log(param);
             router.put(route('appointments.update', {appointment:event,id:param.id,start_time:param.date_at,finish_time:param.end_at,user_id:param.user_id,color:param.color}), { 
                 onSuccess: this.closeModal()
             });

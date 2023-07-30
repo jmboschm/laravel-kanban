@@ -50,7 +50,7 @@ export default {
         let title = eventInfo.el.fcSeg.eventRange.def.title;
       
         let appointmentId = eventInfo.el.fcSeg.eventRange.def.publicId;
-        console.log(appointmentId);
+        //console.log(appointmentId);
         let params = { id: [appointmentId], start: [start_time], finish: [finish_time], title: [title] }
         //console.log(datos);
         axios.get(route('appointments.filter'), {params}).then( ({data}) => {
