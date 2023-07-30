@@ -28,7 +28,7 @@ class Appointment extends Model
      */
     public function getRouteKeyName()
     {
-        return 'title';
+        return 'user_id';
     }
 
     public function user(): belongsTo

@@ -211,7 +211,6 @@ export default {
     },
     getIdByUser(user) {
       // get user id
-      console.log(user, "kks");
       this.user_id = user.id;
     },
   },

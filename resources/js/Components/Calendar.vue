@@ -14,17 +14,15 @@ import esLocale from '@fullcalendar/core/locales/es'
 import iCalendarPlugin from '@fullcalendar/icalendar'
 import axios from 'axios'
 import ModalCalendar from './Modals/CalendarModal.vue'
-import { defineEmits } from "vue";
 import { router  } from "@inertiajs/vue3"
 
-const emit = defineEmits(["deleteAppt","editAppt","closeModal","saveAppt"]);
+
 export default {
     components: {
         FullCalendar,
         ModalCalendar
     },
-/*emits: {'dateClick': null,
-        'eventClick':null,
+  emits: {
         'deleteAppt':{
           id:'',
         },
@@ -33,10 +31,11 @@ export default {
         },
         'closeModal':true,
         'saveAppt':{id:'',},
-      },*/
+      },
     data() {
         return {
           showModal: false,
+          editing : false,
           newEvent: {
                 title: '',
                 date_at: '',
@@ -120,8 +119,9 @@ export default {
             color: data.color,
           }
           //console.log(updatedEventData);
-          
+          this.editing = true,
           this.setModalOpen(updatedEventData);
+
         });
           
           
@@ -140,7 +140,22 @@ export default {
             this.newEvent.color = obj.color,
             this.newEvent.user_id = obj.user_id
         
+            //console.log(obj);
+            if(this.editing == true){
+              return  {
+              //title : this.obj.title,
+              id: obj.id,
+              title: obj.title,
+              date_at : obj.start_time,
+              end_at : obj.finish_time, 
+              color : obj.color,
+              user_id : obj.user_id
+              }
+              //this.editing = false
+              
+            }else {
             return;
+            }
            
         },
         closeModal() {
@@ -157,7 +172,7 @@ export default {
             
           ))
           .then( ({data}) => {
-          console.log('aqui ve data: ', data[0]);
+         // console.log('aqui ve data: ', data[0]);
           var updatedEventData = {
             id: data[0].id,
             user_id: data[0].user_id,
@@ -165,12 +180,27 @@ export default {
             finish_time: data[0].finish_time,
             color: data[0].color,
           }
-          console.log('vaig a borrar: ', updatedEventData);
+          //console.log('vaig a borrar: ', updatedEventData);
           router.delete(route('appointments.destroy',{appointment: data[0]}), {
             onSuccess: this.closeModal()
           });
         });
            
+        },
+        saveAppt(param){
+          let event = JSON.parse(JSON.stringify(param));
+          
+          this.id = param.id
+          this.end_at = param.end_at;
+          this.date_at = param.date_at;
+          this.user_id = param.user_id;
+          this.color = param.color;
+
+          console.log(param);
+            router.put(route('appointments.update', {appointment:event,id:param.id,start_time:param.date_at,finish_time:param.end_at,user_id:param.user_id,color:param.color}), { 
+                onSuccess: this.closeModal()
+            });
+        
         },
       
         /*,
