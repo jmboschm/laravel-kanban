@@ -154,7 +154,12 @@ const showingNavigationDropdown = ref(false);
             Kanban
           </ResponsiveNavLink>
 
-          
+          <ResponsiveNavLink
+            :href="route('events')"
+            :active="route().current('events')"
+          >
+            Calendar
+          </ResponsiveNavLink>
          
         
         </div>
