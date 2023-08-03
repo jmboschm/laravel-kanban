@@ -1,5 +1,5 @@
 const Ziggy = {
-  url: 'http://feina.test',
+  url: 'http://49.12.110.69',
   port: 80,
   defaults: {},
   routes: {
