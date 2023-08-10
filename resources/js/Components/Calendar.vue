@@ -55,6 +55,7 @@ export default {
             initialView: 'dayGridMonth',
             locale: esLocale,
             dayMaxEvents: true,
+           // weekends: false,
             navLinks: true,
             firstDay: 1,
             defaultAllDay: true,
@@ -111,11 +112,13 @@ export default {
           //this.$data.showModal=true;
           //this.setModalOpen(data);
           //console.log('aqui ve data: ',data);
+          let updatedFinishDate =  new Date(data.finish_time);
+          updatedFinishDate.setDate(updatedFinishDate.getDate()-1);
           var updatedEventData = {
             id: data.id,
             user_id: data.user_id,
             start_time: data.start_time,
-            finish_time: data.finish_time,
+            finish_time: updatedFinishDate,
             color: data.color,
           }
           //console.log(updatedEventData);

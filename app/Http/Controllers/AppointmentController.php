@@ -117,7 +117,7 @@ class AppointmentController extends Controller
         //if ($appointment->user_id === $user->id || $user->isAdmin) {
             //dd($request->all());
             $start_time = Carbon::parse($request->start_time);
-            $finish_time = Carbon::parse($request->finish_time);
+            $finish_time = Carbon::parse($request->finish_time)->addDay();
             $appointment->update([
                 'id' => $request->id,
                 'user_id' => $request->user_id,

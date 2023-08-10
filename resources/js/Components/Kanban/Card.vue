@@ -45,6 +45,7 @@ const onSubmit = () => {
     {
       onSuccess: () => {
         useEditCard.value.currentCard = null;
+        form.reset;
       },
     }
   );
@@ -66,7 +67,7 @@ const showForm = async () => {
   <div
     class="cursor-move relative group p-2 bg-white shadow rounded-md border border-b border-gray-300 hover:bg-gray-50"
   >
-    <form v-if="isEditing" @keydown.esc="onCancel" @submit.prevent="onSubmit">
+    <form v-if="isEditing" @keydown.esc="onCancel" @submit.prevent="onSubmit" :show="!isOpen">
       <textarea
         v-model="form.content"
         type="text"
