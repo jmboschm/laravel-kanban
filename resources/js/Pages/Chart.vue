@@ -25,13 +25,13 @@ chartOptions.value= { responsive:true}
 chartData.value = {
     labels:props.data['months'],
     datasets:[
-        {label:'Dies de Baixes', data:props.data['baixes'], backgroundColor:colors}
+        {label:'Dies de Baixes', data:props.data['baixes'], backgroundColor:'red'}
     ]
 }
 </script>
 
 <template>
-    <Head title="Graphic" />
+    <Head title="Charts" />
 
     <AuthenticatedLayout>
         <template #header>
