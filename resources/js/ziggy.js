@@ -96,6 +96,7 @@ const Ziggy = {
     'appointments.destroy':{ uri: 'appointments/{appointment}', methods: ['DELETE']},
     //'appointments.show': { uri: 'appointments/{appointments}', methods: ['GET']},
    // 'appointments.show': { uri: 'appointments.show', methods: ['GET']},
+      'charts': { uri: 'charts', methods: ['GET'] },
   },
 };
 
