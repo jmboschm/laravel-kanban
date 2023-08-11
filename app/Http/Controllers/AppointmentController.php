@@ -10,6 +10,7 @@ use App\Models\User;
 use Validator;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use DB;
 
 
 class AppointmentController extends Controller
@@ -172,7 +173,36 @@ class AppointmentController extends Controller
         ->where('finish_time',$request['parseado']['end'][0])
         ->get();
       }
-        
+    }
+
+    public function baixes()
+    {
+        for ($m=1; $m<=12; $m++) {
+          $month[] = date('F', mktime(0,0,0,$m, 1, date('Y')));
+      }
+
+      $data['months'] = $month;
+    
+      $users = Appointment::all();
+      $total = 0;
+      foreach($users as $user){
+        $diff_in_days = Carbon::parse($user->start_time)->diffInDays(Carbon::parse($user->finish_time));
+        $total += $diff_in_days;
+      }
+
+      //$data = $diff_in_days;
+
+     /* $data = Appointment::select(DB::raw('count(appointments.user_id) as count, users.name'))
+        ->join('users','users.id','=','appointments.user_id')
+        ->groupBy('users.name')
+        ->get();*/
+
+    //  $start_time = Carbon::parse($user[0]['start_time']);
+    //  $finish_time = Carbon::parse($user[0]['finish_time']);
+    //  $diff_in_days = $start_time->diffInDays($finish_time);
+      $data['baixes'] = $total;
+      //dd($data);
+      return Inertia::render('Chart',['data' => $data]);
         
     }
 }

@@ -16,6 +16,7 @@ use App\Http\Controllers\AppointmentController;
 
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ChartController;
 
 use App\Models\User;
 
@@ -67,6 +68,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('cards.reorder');
 
     Route::get('/events', SearchController::class)->name('events');
+
+    Route::get('/charts', [AppointmentController::class,'baixes'])->name('charts');
 
     Route::get('/users', function() {
         return User::all();

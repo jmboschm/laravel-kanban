@@ -47,6 +47,13 @@ const showingNavigationDropdown = ref(false);
               >
                 Calendar
               </NavLink>
+
+              <NavLink
+                :href="route('charts')"
+                :active="route().current('charts')"
+              >
+                Charts
+              </NavLink>
             </div>
           </div>
 
@@ -159,6 +166,13 @@ const showingNavigationDropdown = ref(false);
             :active="route().current('events')"
           >
             Calendar
+          </ResponsiveNavLink>
+
+          <ResponsiveNavLink
+            :href="route('charts')"
+            :active="route().current('charts')"
+          >
+            Charts
           </ResponsiveNavLink>
          
         

@@ -124,7 +124,6 @@ export default {
           //console.log(updatedEventData);
           this.editing = true,
           this.setModalOpen(updatedEventData);
-
         });
           
           
