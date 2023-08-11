@@ -24,7 +24,7 @@ chartOptions.value= { responsive:true}
 chartData.value = {
     labels:props.data['months'],
     datasets:[
-        {label:'Dies de Baixa', data:props.data['baixes'], backgroundColor:colors}
+        {label:'Dies de Baixes', data:props.data['baixes'], backgroundColor:colors}
     ]
 }
 </script>
