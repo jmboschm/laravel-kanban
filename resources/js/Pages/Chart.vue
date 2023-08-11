@@ -20,6 +20,7 @@ const colors = ref([]);
 
 console.log(props.data['baixes']);
 
+
 chartOptions.value= { responsive:true}
 chartData.value = {
     labels:props.data['months'],
