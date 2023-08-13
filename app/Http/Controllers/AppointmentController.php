@@ -178,44 +178,85 @@ class AppointmentController extends Controller
     public function baixes()
     {
 
-      $appointments = Appointment::where('color','=','black')->get();
+      $appointments = Appointment::with('user:id,name')->where('color','=','black')->get();
+
       $users = User::all();
       $total = 0;
-      
+  
         for ($m=1; $m<=12; $m++) {
           $month[] = date('F', mktime(0,0,0,$m, 1, date('Y')));
-          $baixes[] = $m;
+          $baixes[] = 0;
+        }
+        
+ 
+          $total = 0;
+
+   
           foreach($appointments as $appointment){
             
-            $diff_in_days = Carbon::parse($appointment->start_time)->diffInDays(Carbon::parse($appointment->finish_time));
-            $monthNumber = Carbon::parse($appointment->start_time)->format('m');
-            if($m == $monthNumber){
-              //$names[$m][] = $appointment->user->name;
-              $baixes[] = ['month' => date('F', mktime(0,0,0,$m, 1, date('Y'))), 'name' => $appointment->user->name,'days' =>$diff_in_days];
+            $diff_in_days = 0;
+            $lastDayofMonth = Carbon::parse($appointment->start_time)->endOfMonth()->toDateTimeString();
+            $firstDayOfMonth = Carbon::parse($appointment->finish_time)->firstOfMonth()->toDateTimeString();
+           
+            /**
+             * Si la baixa comença i acaba al mateix mes
+             */
+            if(Carbon::parse($appointment->start_time)->format('m') == (Carbon::parse($appointment->finish_time)->format('m'))) {
+              $diff_in_days = Carbon::parse($appointment->start_time)->diffInDays(Carbon::parse($appointment->finish_time));
+                if($diff_in_days == 0){
+                  $diff_in_days++;
+                }
+                $total += $diff_in_days;
+                $monthNumber = Carbon::parse($appointment->start_time)->month;
+                $baixes[$monthNumber] = $total;
             }
-          }
-      }
 
+            
+            
+            /**
+             * Si la baixa no coincideix en el mateix mes el inici i el final
+             */
+            else if((Carbon::parse($appointment->start_time)->format('m')) != (Carbon::parse($appointment->finish_time)->format('m'))){
+              /**
+               * Si la baixa ha començat un mes però acaba en un altre mes, comptar només els dies de baixa d'aquest més
+               * Si la baixa comença un mes però acaba en un altre mes, comptar només els dies de baixa de l'ultim mes
+               */
+                
+                $lastDayofMonth = Carbon::parse($appointment->start_time)->endOfMonth()->toDateTimeString();
+                $diff_in_days = Carbon::parse($appointment->start_time)->diffInDays(Carbon::parse($lastDayofMonth));
+                if($diff_in_days == 0){
+                  $diff_in_days++;
+                }
+                $total += $diff_in_days;
+                $monthNumber = Carbon::parse($appointment->start_time)->month;
+                $baixes[$monthNumber] = $total;
+
+                $diff_in_days = 0;
+                $total = 0;
+                
+                
+                $firstDayOfMonth = Carbon::parse($appointment->finish_time)->firstOfMonth()->toDateTimeString();
+                //dd(Carbon::parse($appointment->finish_time)->toDateTimeString());
+                $diff_in_days = Carbon::parse($firstDayOfMonth)->diffInDays(Carbon::parse($appointment->finish_time));
+                if($diff_in_days == 0){
+                  $diff_in_days++;
+                }
+               
+                $total += $diff_in_days;
+                $monthNumber = Carbon::parse($appointment->start_time)->month;
+                $baixes[$monthNumber+1] = $total;
+                         
+          }
+        }
+          
+      
+        
       $data['months'] = $month;
     
-      
-      
-
-      //$data = $diff_in_days;
-
-     /* $data = Appointment::select(DB::raw('count(appointments.user_id) as count, users.name'))
-        ->join('users','users.id','=','appointments.user_id')
-        ->groupBy('users.name')
-        ->get();*/
-
-    //  $start_time = Carbon::parse($user[0]['start_time']);
-    //  $finish_time = Carbon::parse($user[0]['finish_time']);
-    //  $diff_in_days = $start_time->diffInDays($finish_time);
-   //   $data['names'] = $names;
       $data['baixes'] = $baixes;
 
 
-     // dd($data);
+      //dd($data);
       return Inertia::render('Chart',['data' => $data]);
         
     }
