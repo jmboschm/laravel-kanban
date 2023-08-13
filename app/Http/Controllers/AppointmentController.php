@@ -168,9 +168,10 @@ class AppointmentController extends Controller
         return Appointment::findOrFail($request['parseado']['id'][0]);
       } else {
         //dd($request->all());
-        return Appointment::where('user_id',$request['parseado']['user_id'][0])
+         return Appointment::where('user_id',$request['parseado']['user_id'][0])
         ->where('start_time',$request['parseado']['start'][0])
         ->where('finish_time',$request['parseado']['end'][0])
+        ->where('color',$request['parseado']['color'][0])
         ->get();
       }
     }
@@ -227,7 +228,7 @@ class AppointmentController extends Controller
                 DB::raw("Month('$dueDate') as month"),
                 DB::raw("DATEDIFF('$dateFrom','$dueDate') AS Days")));
                 
-                if($a[0]['Days'] == 0) {$total = 1;
+                if($a[0]['Days'] < 1) {$total = 1;
                   $baixes[$a[0]['month']][] = $total;
                 }else {
                 $baixes[$a[0]['month']][] = $a[0]['Days'];

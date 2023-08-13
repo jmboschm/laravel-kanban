@@ -165,27 +165,28 @@ export default {
         deleteAppt(param) {
           
           let event = JSON.parse(JSON.stringify(param));
-          //console.log(appointment.date_at);
-          event = { start: [event.date_at], end: [event.end_at], title: [event.title], user_id: [event.user_id] }
-         // console.log('params: ', event);
-          let parseado = JSON.parse(JSON.stringify(event));
-          axios.get(route('appointments.filter', {parseado , type: 2}
+          
+          event = { start: [event.date_at], end: [event.end_at], title: [event.title], user_id: [event.user_id] , color: [event.color] }
+          console.log('params: ', event);
+          //let parseado = JSON.parse(JSON.stringify(event));
+          /*axios.get(route('appointments.filter', {parseado , type: 2}
             
           ))
           .then( ({data}) => {
-         // console.log('aqui ve data: ', data[0]);
+          console.log('aqui ve data: ', data);
           var updatedEventData = {
             id: data[0].id,
             user_id: data[0].user_id,
+            title: data[0].title,
             start_time: data[0].start_time,
             finish_time: data[0].finish_time,
             color: data[0].color,
-          }
+          }*/
           //console.log('vaig a borrar: ', updatedEventData);
-          router.delete(route('appointments.destroy',{appointment: data[0]}), {
+          router.delete(route('appointments.destroy',{appointment: event}), {
             onSuccess: this.closeModal()
           });
-        });
+       // });
            
         },
         saveAppt(param){
