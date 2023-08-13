@@ -263,10 +263,17 @@ class AppointmentController extends Controller
       foreach($baixes as $key => $value){
         $baixes[$key] = array_sum($baixes[$key]);
       }
+
+      foreach($baixes as $key => $value){
+        $final[] = strval($value);
+      }
+     // dd($test);
       $data['months'] = $month;
-      $data['baixes'] = $baixes;
-      //dd($data);
+      $data['baixes'] = $final;
+     // dd($data);
       return Inertia::render('Chart',['data' => $data]);
+        
+    
         
     }
 }

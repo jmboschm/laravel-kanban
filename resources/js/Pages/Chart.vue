@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import {ref} from 'vue';
+import { isProxy, toRaw } from 'vue';
 import {Bar,Pie} from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, 
     LinearScale, ArcElement } from 'chart.js';
@@ -18,7 +19,10 @@ const chartData = ref([]);
 const chartOptions = ref([]);
 const colors = ref([]);
 
-console.log(props.data['baixes']);
+//console.log(props.data['months']);
+//console.log(props.data['baixes']);
+
+
 
 
 chartOptions.value= { responsive:true}
