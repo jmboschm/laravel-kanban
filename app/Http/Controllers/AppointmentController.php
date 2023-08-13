@@ -188,7 +188,7 @@ class AppointmentController extends Controller
           $baixes[] = 0;
         }
         
- 
+      
           $total = 0;
 
    
@@ -208,7 +208,7 @@ class AppointmentController extends Controller
                 }
                 $total += $diff_in_days;
                 $monthNumber = Carbon::parse($appointment->start_time)->month;
-                $baixes[$monthNumber] = $total;
+                $baixes[$monthNumber-1] = $total;
             }
 
             
@@ -229,7 +229,7 @@ class AppointmentController extends Controller
                 }
                 $total += $diff_in_days;
                 $monthNumber = Carbon::parse($appointment->start_time)->month;
-                $baixes[$monthNumber] = $total;
+                $baixes[$monthNumber-1] = $total;
 
                 $diff_in_days = 0;
                 $total = 0;
@@ -243,8 +243,8 @@ class AppointmentController extends Controller
                 }
                
                 $total += $diff_in_days;
-                $monthNumber = Carbon::parse($appointment->start_time)->month;
-                $baixes[$monthNumber+1] = $total;
+                $monthNumber = Carbon::parse($appointment->finish_time)->month;
+                $baixes[$monthNumber-1] = $total;
                          
           }
         }
