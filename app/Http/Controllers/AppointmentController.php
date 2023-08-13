@@ -185,77 +185,86 @@ class AppointmentController extends Controller
   
         for ($m=1; $m<=12; $m++) {
           $month[] = date('F', mktime(0,0,0,$m, 1, date('Y')));
-          $baixes[] = 0;
+          $baixes[$m][] = array();;
         }
         
       
-          $total = 0;
-
+          
+        $total = 0;
+        $diff_in_days = 0;
    
           foreach($appointments as $appointment){
-            
-            $diff_in_days = 0;
-            $lastDayofMonth = Carbon::parse($appointment->start_time)->endOfMonth()->toDateTimeString();
-            $firstDayOfMonth = Carbon::parse($appointment->finish_time)->firstOfMonth()->toDateTimeString();
-           
             /**
              * Si la baixa comença i acaba al mateix mes
              */
-            if(Carbon::parse($appointment->start_time)->format('m') == (Carbon::parse($appointment->finish_time)->format('m'))) {
-              $diff_in_days = Carbon::parse($appointment->start_time)->diffInDays(Carbon::parse($appointment->finish_time));
-                if($diff_in_days == 0){
-                  $diff_in_days++;
-                }
-                $total += $diff_in_days;
-                $monthNumber = Carbon::parse($appointment->start_time)->month;
-                $baixes[$monthNumber-1] = $total;
-            }
-
-            
-            
+            if(Carbon::parse($appointment->start_time)->month === Carbon::parse($appointment->finish_time)->month) {
+              $a = $appointment::where('color','=','black')
+                ->where('start_time','=',$appointment->start_time)
+                ->where('finish_time','=',$appointment->finish_time)
+              ->get(array(
+                'id', 'title', 'user_id',
+                'color', 'start_time','finish_time', 
+                DB::raw('Month(start_time) as month'),
+                DB::raw("DATEDIFF(finish_time,start_time) AS Days")));
+                if($a[0]['Days'] == 0) {$a[0]['Days'] == 1;}
+                $baixes[$a[0]['month']][] = $a[0]['Days'];
+               
+    }
             /**
              * Si la baixa no coincideix en el mateix mes el inici i el final
              */
-            else if((Carbon::parse($appointment->start_time)->format('m')) != (Carbon::parse($appointment->finish_time)->format('m'))){
-              /**
-               * Si la baixa ha començat un mes però acaba en un altre mes, comptar només els dies de baixa d'aquest més
-               * Si la baixa comença un mes però acaba en un altre mes, comptar només els dies de baixa de l'ultim mes
-               */
+      else if(Carbon::parse($appointment->start_time)->month !== Carbon::parse($appointment->finish_time)->month){
+        /**
+         * Si la baixa comença un mes però acaba en un altre mes, comptar només els dies de baixa de l'ultim mes
+         */
+        $dateFrom = Carbon::parse($appointment->start_time)->endOfMonth()->format('Y-m-d');
+        $dueDate = Carbon::parse($appointment->start_time)->format('Y-m-d');
+        $a = $appointment::where('color','=','black')
+        ->where('id','=',$appointment->id)
+              ->get(array(
+                'title', 'user_id',
                 
-                $lastDayofMonth = Carbon::parse($appointment->start_time)->endOfMonth()->toDateTimeString();
-                $diff_in_days = Carbon::parse($appointment->start_time)->diffInDays(Carbon::parse($lastDayofMonth));
-                if($diff_in_days == 0){
-                  $diff_in_days++;
+                DB::raw("Month('$dueDate') as month"),
+                DB::raw("DATEDIFF('$dateFrom','$dueDate') AS Days")));
+                
+                if($a[0]['Days'] == 0) {$total = 1;
+                  $baixes[$a[0]['month']][] = $total;
+                }else {
+                $baixes[$a[0]['month']][] = $a[0]['Days'];
                 }
-                $total += $diff_in_days;
-                $monthNumber = Carbon::parse($appointment->start_time)->month;
-                $baixes[$monthNumber-1] = $total;
+                
 
-                $diff_in_days = 0;
-                $total = 0;
+                /**
+                 * Si la baixa comença un mes però acaba en un altre mes, comptar només els dies de baixa de l'ultim mes
+                 */
+
+                $dateFrom = Carbon::parse($appointment->finish_time)->startOfMonth()->format('Y-m-d');
+                $dueDate = Carbon::parse($appointment->finish_time)->format('Y-m-d');
+                $a = $appointment::where('color','=','black')
+              ->where('id','=',$appointment->id)
+              ->get(array(
+                'title', 'user_id',
+                
+                DB::raw("Month('$dueDate') as month"),
+                DB::raw("DATEDIFF('$dueDate','$dateFrom') AS Days")));
+                
+                if($a[0]['Days'] == 0) {$total = 1;
+                $baixes[$a[0]['month']][] = $total;
+              }else {
+              $baixes[$a[0]['month']][] = $a[0]['Days'];
+              }
                 
                 
-                $firstDayOfMonth = Carbon::parse($appointment->finish_time)->firstOfMonth()->toDateTimeString();
-                //dd(Carbon::parse($appointment->finish_time)->toDateTimeString());
-                $diff_in_days = Carbon::parse($firstDayOfMonth)->diffInDays(Carbon::parse($appointment->finish_time));
-                if($diff_in_days == 0){
-                  $diff_in_days++;
-                }
-               
-                $total += $diff_in_days;
-                $monthNumber = Carbon::parse($appointment->finish_time)->month;
-                $baixes[$monthNumber-1] = $total;
-                         
-          }
-        }
-          
-      
-        
+              }
+
+
+
+      }
+      foreach($baixes as $key => $value){
+        $baixes[$key] = array_sum($baixes[$key]);
+      }
       $data['months'] = $month;
-    
       $data['baixes'] = $baixes;
-
-
       //dd($data);
       return Inertia::render('Chart',['data' => $data]);
         
